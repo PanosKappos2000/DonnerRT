@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <cstdint>
-#include <iostream>
+
+#include "donMath.h"
 
 int main()
 {
@@ -12,13 +13,11 @@ int main()
 	{
 		for (uint32_t i = 0; i < nx; ++i)
 		{
-			float r = float(i) / float(nx);
-			float g = float(j) / float(ny);
-			float b = 0.2f;
+            DonMath::vec3 vec(float(i) / float(nx), float(j) / float(ny), 0.2f);
 
-			uint32_t ir = uint32_t(255.99 * r);
-			uint32_t ig = uint32_t(255.99 * g);
-			uint32_t ib = uint32_t(255.99 * b);
+			uint32_t ir = uint32_t(255.99 * vec.r);
+			uint32_t ig = uint32_t(255.99 * vec.g);
+			uint32_t ib = uint32_t(255.99 * vec.b);
 
 			std::cout << ir << ' ' << ig << ' ' << ib << '\n';
 		}
