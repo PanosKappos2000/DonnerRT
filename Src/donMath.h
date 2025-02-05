@@ -49,6 +49,8 @@ namespace DonMath
 
     inline float Length(vec3 vec) { return sqrtf(LengthSquared(vec)); }
 
+    inline vec3 UnitVector(vec3& vec) {return vec / Length(vec);}
+
     inline std::istream& operator >> (std::istream& is, vec3& vec){
         is >> vec.x >> vec.y >> vec.z;
         return is; 
@@ -71,4 +73,12 @@ namespace DonMath
     inline vec3 Cross(vec3& v1, vec3& v2){
         return vec3(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z, v1.x * v2.y - v1.y * v2.x);
     }
+
+    struct Ray
+    {
+        vec3 origin;
+        vec3 direction;
+    };
+
+    inline vec3 RayPointAt(Ray& ray, float t){ return ray.origin + ray.direction * t; }
 }
