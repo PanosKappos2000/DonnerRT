@@ -81,4 +81,59 @@ namespace DonMath
     };
 
     inline vec3 RayPointAt(Ray& ray, float t){ return ray.origin + ray.direction * t; }
+
+    struct RayHitRecord
+    {
+        float t;
+
+        DonMath::vec3 p;
+        DonMath::vec3 normal;
+    };
+
+    // Even though the objects are all sphere anyway, 
+    // this bounding sphere could be used to check intersection with a ray for any object by generating it from their vertices.
+    // This is why I call it a bounding sphere and not just sphere
+    struct BoundingSphere
+    {
+        vec3 center;
+        float radius;
+
+        uint8_t RayHitCheck(Ray& ray, float tMin, float tMax, RayHitRecord& hitRecord)
+        {
+            vec3 oc = ray.origin - center;
+            float a = Dot(ray.direction, ray.direction);
+            float b = Dot(oc, ray.direction);
+            float c = Dot(oc, oc) - radius * radius;
+            float discriminant = b * b - a * c;
+
+            if(discriminant > 0)
+            {
+                float temp = (-b - sqrtf(discriminant)) / a;
+                if(temp < tMax && temp > tMin)
+                {
+                    // Record the hit
+                    hitRecord.t = temp;
+                    hitRecord.p = RayPointAt(ray, hitRecord.t);
+                    hitRecord.normal = (hitRecord.p - center) / radius;
+
+                    // Return true
+                    return 1;
+                }
+
+                temp = (-b + sqrtf(discriminant)) / a;
+                if(temp < tMax && temp > tMin)
+                {
+                    // Record the hit
+                    hitRecord.t = temp;
+                    hitRecord.p = RayPointAt(ray, hitRecord.t);
+                    hitRecord.normal = (hitRecord.p - center) / radius;
+
+                    // Return true
+                    return 1;
+                }
+            }
+
+            return 0;
+        }
+    };
 }
