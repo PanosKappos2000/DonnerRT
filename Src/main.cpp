@@ -26,8 +26,21 @@ DonMath::BoundingSphere* pSpheres, uint32_t sphereCount)
 DonMath::vec3 TestColor(DonMath::Ray& ray, DonMath::BoundingSphere* pSpheres, uint32_t sphereCount)
 {
     DonMath::RayHitRecord record;
-    if(HitAnything(ray, 0.f, FLT_MAX, record, pSpheres, sphereCount))
-        return DonMath::vec3(record.normal.x + 1, record.normal.y + 1, record.normal.z + 1) * 0.5;
+    if(HitAnything(ray, 0.001f, FLT_MAX, record, pSpheres, sphereCount))
+    {
+        DonMath::vec3 random;
+        do{
+            random = DonMath::vec3(rand() / 100.f) - DonMath::vec3(1.f);
+        }while(DonMath::LengthSquared(random) >= 1.f);
+
+        DonMath::vec3 target = record.p + record.normal + random;
+
+        DonMath::Ray newRay;
+        newRay.origin = record.p;
+        newRay.direction = target - record.p;
+        
+        return TestColor(newRay, pSpheres, sphereCount) * 0.5;
+    }
 
     DonMath::vec3 unitDirection = DonMath::UnitVector(ray.direction);
     float t = 0.5 * (unitDirection.y + 1.0);
@@ -58,15 +71,20 @@ int main()
 	{
 		for (uint32_t i = 0; i < nx; ++i)
 		{
-            float u = float(i) / float(nx);
-            float v = float(j) / float(ny);
+            DonMath::vec3 color(0.f);
+            for(uint32_t s = 0; s < ns; ++s)
+            {
+                float u = float(i) / float(nx);
+                float v = float(j) / float(ny);
 
-            DonMath::Ray ray;
-            ray.origin = origin;
-            ray.direction = lowerLeftCorner + horizontal * u + vertical * v;
+                DonMath::Ray ray = camera.GetRay(u, v);
+                DonMath::vec3 p = DonMath::RayPointAt(ray, 2.f);
 
-            DonMath::RayPointAt(ray, 2.f);
-            DonMath::vec3 color = TestColor(ray, spheres, 2);
+                color = color + TestColor(ray, spheres, 2);
+            }
+            
+            color = color / float(ns);
+            color = DonMath::vec3(sqrtf(color.x), sqrtf(color.y), sqrtf(color.z));
 
 			uint32_t ir = uint32_t(255.99 * color.r);
 			uint32_t ig = uint32_t(255.99 * color.g);
@@ -75,4 +93,6 @@ int main()
 			std::cout << ir << ' ' << ig << ' ' << ib << '\n';
 		}
 	}
+
+    return 1;
 }
