@@ -51,28 +51,24 @@ int main()
 	uint32_t ny = 100;
     uint32_t ns = 100;
 
-    DonMath::vec3 lowerLeftCorner(-2.f, -1.f, -1.f);
-    DonMath::vec3 horizontal(4.f, 0.f, 0.f);
-    DonMath::vec3 vertical(0.f, 2.f, 0.f);
-    DonMath::vec3 origin(0.f);
-
     Material albedo1;
-    albedo1.metallic = 0;
+    albedo1.type = MaterialType::albedo;
     albedo1.albedo = DonMath::vec3(0.8f, 0.8f, 0.3f);
 
     Material albedo2;
-    albedo2.metallic = 0;
+    albedo2.type = MaterialType::albedo;
     albedo2.albedo = DonMath::vec3(0.8f, 0.8f, 0.0f);
 
     Material metallic1;
-    metallic1.metallic = 1;
+    metallic1.type = MaterialType::metallic;
     metallic1.albedo = DonMath::vec3(0.8f, 0.6f, 0.2f);
+    metallic1.fuzz = 0.3f;
 
     Material metallic2;
-    metallic2.metallic = 1;
-    metallic2.albedo = DonMath::vec3(0.8f);
+    metallic2.type = MaterialType::dielectric;
+    metallic2.refractionIndex = 1.5f;
 
-    DonMath::BoundingSphere spheres[4];
+    DonMath::BoundingSphere spheres[5];
     // One normal sphere in the middle to reflect on the left and right metallic spheres
     spheres[0].center = DonMath::vec3(0.f, 0.f, -1.f);
     spheres[0].radius = 0.5f;
@@ -89,6 +85,10 @@ int main()
     spheres[3].center = DonMath::vec3(-1.f, 0.f, -1.f);
     spheres[3].radius = 0.5f;
     spheres[3].pMat = &metallic2;
+
+    spheres[4].center = DonMath::vec3(-1.f, 0.f, -1.f);
+    spheres[4].radius = -0.45f;
+    spheres[4].pMat = &metallic2;
 
     Donner::Camera camera;
 
