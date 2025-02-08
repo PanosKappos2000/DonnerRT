@@ -9,7 +9,8 @@ set (CMAKE_CXX_STANDARD_REQUIRED True)
 add_executable(DonnerRT 
                 Src/main.cpp
                 Src/donMath.h
-                Src/camera.h)
+                Src/camera.h
+                Src/material.h)
 
 target_include_directories(DonnerRT PUBLIC
                         "${PROJECT_SOURCE_DIR}/Src")

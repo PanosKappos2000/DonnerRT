@@ -4,6 +4,9 @@
 #include <math.h>
 #include <stdlib.h>
 
+// Declared here so that the RayHitRecord struct knows about it without causing circular dependencies
+struct Material;
+
 namespace DonMath
 {
 
@@ -88,6 +91,8 @@ namespace DonMath
 
         DonMath::vec3 p;
         DonMath::vec3 normal;
+
+        Material* pMat;
     };
 
     // Even though the objects are all sphere anyway, 
@@ -97,6 +102,8 @@ namespace DonMath
     {
         vec3 center;
         float radius;
+
+        Material* pMat;
 
         uint8_t RayHitCheck(Ray& ray, float tMin, float tMax, RayHitRecord& hitRecord)
         {
